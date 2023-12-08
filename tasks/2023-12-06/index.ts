@@ -11,8 +11,7 @@ export class OrderController {
 
   setState(state: string) {
     if (state === 'unknown') throw new Error('Invalid state provided');
-    this.machines.map((machine) => (machine.state = state));
-    this.machines.map((machine) => machine.getListOfStates());
+    this.machines.map((machine) => machine.updateState(state));
   }
 
   unregisterMachine(machine: any) {
@@ -22,21 +21,19 @@ export class OrderController {
 
 export class Machine {
   state: string | null;
-  currentListOfStates: string[];
-  orderNumber: number;
+  orderHistory: string[];
 
   constructor() {
     this.state = null;
-    this.currentListOfStates = [];
-    this.orderNumber = 0;
+    this.orderHistory = [];
   }
 
-  getListOfStates() {
-    this.orderNumber++;
-    this.currentListOfStates.push(`Order #${this.orderNumber} - ${this.state}`);
+  updateState(state: string) {
+    this.state = state;
+    this.orderHistory.push(`Order #${this.orderHistory.length + 1} - ${this.state}`);
   }
 
   performAudit() {
-    return this.currentListOfStates;
+    return this.orderHistory;
   }
 }
